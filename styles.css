@@ -1,0 +1,40 @@
+/* Basic reset to remove default margins and padding */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
+
+/* Flexbox container to center content */
+.spline-embed {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+/* Responsive iframe styling */
+.spline-embed iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Example of a media query for responsive design */
+@media (max-width: 600px) {
+    .spline-embed iframe {
+        width: 100%;
+        height: 70vh;
+    }
+}
+
+@media (min-width: 1200px) {
+    .spline-embed iframe {
+        width: 80%;
+        height: 80vh;
+    }
+}
