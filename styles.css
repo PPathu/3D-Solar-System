@@ -1,40 +1,34 @@
-/* Basic reset to remove default margins and padding */
 body, html {
     margin: 0;
     padding: 0;
+    overflow: hidden;
     width: 100%;
     height: 100%;
-    overflow: hidden;
     font-family: Arial, sans-serif;
 }
 
-/* Flexbox container to center content */
-.spline-embed {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#scene-container {
     width: 100%;
     height: 100vh;
 }
 
-/* Responsive iframe styling */
-.spline-embed iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-/* Example of a media query for responsive design */
+/* Media query for very small screens (e.g., small phones) */
 @media (max-width: 600px) {
-    .spline-embed iframe {
-        width: 100%;
+    #scene-container {
         height: 70vh;
     }
 }
 
-@media (min-width: 1200px) {
-    .spline-embed iframe {
-        width: 80%;
+/* Media query for tablets and small desktops */
+@media (min-width: 600px) and (max-width: 1200px) {
+    #scene-container {
         height: 80vh;
+    }
+}
+
+/* Media query for large desktops */
+@media (min-width: 1200px) {
+    #scene-container {
+        height: 90vh;
     }
 }

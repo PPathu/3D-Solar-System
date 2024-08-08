@@ -3,17 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Portfolio</title>
-    <!-- Link to your CSS file -->
+    <title>3D Portfolio with Three.js</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
 </head>
 <body>
-    <!-- Container for your 3D embed -->
-    <div class="spline-embed">
-        <iframe src="https://my.spline.design/miniroomartcopy-35e40890fb0383a60eb7df1a26bd9d30/" frameborder="0" width="100%" height="100%"></iframe>
-    </div>
-
-    <!-- Link to your JavaScript file -->
+    <!-- Container for the 3D scene -->
+    <div id="scene-container"></div>
+    
     <script src="script.js"></script>
 </body>
 </html>
