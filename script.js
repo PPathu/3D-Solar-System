@@ -1,4 +1,5 @@
-let scene, camera, renderer, earth, controls, starfield;
+let scene, camera, renderer, controls;
+let sun, planets = [];
 let raycaster, mouse, isDragging = false;
 let zoomingIn = true;  
 let zoomSpeed = 0.05;  
@@ -13,8 +14,6 @@ function init() {
         0.1, 
         1000
     );
-
-    // Set the camera's initial position based on the startZoomDistance
     camera.position.z = startZoomDistance;
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -23,22 +22,49 @@ function init() {
 
     const textureLoader = new THREE.TextureLoader();
 
-    // Load the Earth texture
-    const earthTexture = textureLoader.load('textures/2k_earth_daymap.jpg');
+    // Sun
+    const sunTexture = textureLoader.load('textures/sun.jpg');
+    const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
+    const sunMaterial = new THREE.MeshBasicMaterial({ map: sunTexture, emissive: 0xFFFF00 });
+    sun = new THREE.Mesh(sunGeometry, sunMaterial);
+    scene.add(sun);
 
-    // Create the Earth sphere and apply the texture
-    const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
-    const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
-    earth = new THREE.Mesh(earthGeometry, earthMaterial);
-    scene.add(earth);
+    // Planets array
+    const planetData = [
+        { name: "Mercury", size: 0.3, distance: 4, texture: 'textures/mercury.jpg', speed: 0.0047 },
+        { name: "Venus", size: 0.9, distance: 6, texture: 'textures/venus.jpg', speed: 0.0035 },
+        { name: "Earth", size: 1, distance: 8, texture: 'textures/earth.jpg', speed: 0.003 },
+        { name: "Mars", size: 0.5, distance: 10, texture: 'textures/mars.jpg', speed: 0.0024 },
+        { name: "Jupiter", size: 2, distance: 14, texture: 'textures/jupiter.jpg', speed: 0.0013 },
+        { name: "Saturn", size: 1.7, distance: 18, texture: 'textures/saturn.jpg', speed: 0.0009 },
+        { name: "Uranus", size: 1.2, distance: 22, texture: 'textures/uranus.jpg', speed: 0.0006 },
+        { name: "Neptune", size: 1.2, distance: 26, texture: 'textures/neptune.jpg', speed: 0.0005 }
+    ];
+
+    planetData.forEach(data => {
+        const planetTexture = textureLoader.load(data.texture);
+        const planetGeometry = new THREE.SphereGeometry(data.size, 32, 32);
+        const planetMaterial = new THREE.MeshStandardMaterial({ map: planetTexture });
+        const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+
+        planet.position.x = data.distance;
+        scene.add(planet);
+
+        planets.push({
+            mesh: planet,
+            distance: data.distance,
+            speed: data.speed,
+            angle: 0  // Initial angle for orbit
+        });
+    });
 
     // Create star particles
     const particlesGeometry = new THREE.BufferGeometry();
     const particlesCount = 15000;
-    const vertices = new Float32Array(particlesCount * 3); // x, y, z for each particle
+    const vertices = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i++) {
-        vertices[i] = (Math.random() - 0.5) * 1000; // Distribute stars within a large cube
+        vertices[i] = (Math.random() - 0.5) * 1000;
     }
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
@@ -89,14 +115,7 @@ function onMouseDown(event) {
 
     raycaster.setFromCamera(mouse, camera);
 
-    const intersects = raycaster.intersectObject(earth);
-
-    if (intersects.length > 0) {
-        isDragging = true;
-        controls.enabled = true;
-    } else {
-        controls.enabled = false;
-    }
+    isDragging = true;
 }
 
 function onMouseMove(event) {
@@ -107,13 +126,17 @@ function onMouseMove(event) {
 
 function onMouseUp(event) {
     isDragging = false;
-    controls.enabled = false;
 }
 
 function animate() {
     requestAnimationFrame(animate);
 
-    earth.rotation.y += 0.001;
+    // Rotate planets around the sun
+    planets.forEach(planet => {
+        planet.angle += planet.speed;
+        planet.mesh.position.x = planet.distance * Math.cos(planet.angle);
+        planet.mesh.position.z = planet.distance * Math.sin(planet.angle);
+    });
 
     // Rotate the stars slightly to add some dynamism
     scene.children.forEach(child => {
