@@ -1,8 +1,8 @@
 let scene, camera, renderer, earth, controls, starfield;
 let raycaster, mouse, isDragging = false;
-let zoomingIn = true;  // Flag to indicate whether the camera is zooming in
-let zoomSpeed = 0.05;  // Speed of the zoom-in effect
-let startZoomDistance = 325;  // Initial distance the camera zooms in from
+let zoomingIn = true;  
+let zoomSpeed = 0.05;  
+let startZoomDistance = 325;  
 
 function init() {
     scene = new THREE.Scene();
@@ -43,7 +43,7 @@ function init() {
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
-    const particleTexture = textureLoader.load('textures/particles/star.png'); // Make sure this file exists
+    const particleTexture = textureLoader.load('textures/particles/star.png'); 
     const particlesMaterial = new THREE.PointsMaterial({
         map: particleTexture,
         size: 0.5,
@@ -71,7 +71,7 @@ function init() {
     controls.enableZoom = true;
     controls.zoomSpeed = 1.0;
 
-    controls.minDistance = 1;
+    controls.minDistance = 4;
     controls.maxDistance = startZoomDistance;
 
     window.addEventListener('mousedown', onMouseDown);
