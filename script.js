@@ -38,7 +38,7 @@ function init() {
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
-    const particleTexture = textureLoader.load('textures/star.png'); // Make sure this file exists
+    const particleTexture = textureLoader.load('textures/particles/star.png'); // Make sure this file exists
     const particlesMaterial = new THREE.PointsMaterial({
         map: particleTexture,
         size: 0.5,
@@ -59,10 +59,16 @@ function init() {
     raycaster = new THREE.Raycaster();
     mouse = new THREE.Vector2();
 
+    // Initialize OrbitControls with zoom limits
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.enableZoom = false;
+    controls.enableZoom = true;  // Enable zooming with the scroll wheel
+    controls.zoomSpeed = 1.0;  // Adjust the zoom speed if needed
+
+    // Set zoom limits
+    controls.minDistance = 4;  // Minimum distance from the Earth
+    controls.maxDistance = 500;  // Maximum distance to prevent zooming out beyond the stars
 
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onMouseMove);
@@ -103,7 +109,7 @@ function onMouseUp(event) {
 function animate() {
     requestAnimationFrame(animate);
 
-    earth.rotation.y += 0.003;
+    earth.rotation.y += 0.001;
 
     // Rotate the stars slightly to add some dynamism
     scene.children.forEach(child => {
