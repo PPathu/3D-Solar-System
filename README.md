@@ -1,8 +1,8 @@
 ---
 
-# 3D Portfolio with Three.js
+# 3D Solar System with Three.js
 
-This project is a 3D portfolio website built using [Three.js](https://threejs.org/). It features an interactive solar system where users can explore planets by clicking on them, zooming in for a closer view, and rotating around them in a 360-degree view.
+This project is a 3D solar system built using [Three.js](https://threejs.org/). It features an interactive solar system where users can zoom in for a closer view, and rotating around the system in a 360-degree view.
 
 ## Features
 
