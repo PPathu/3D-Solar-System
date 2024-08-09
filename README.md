@@ -7,7 +7,6 @@ This project is a 3D portfolio website built using [Three.js](https://threejs.or
 ## Features
 
 - **Realistic Solar System**: The project simulates the solar system with planets orbiting around the sun.
-- **Interactive Camera**: Users can click on planets to zoom in and rotate around them.
 - **Customizable**: Easily replace textures and tweak parameters to create your own 3D scenes.
 - **Responsive Design**: The layout adjusts to different screen sizes, ensuring a consistent experience across devices.
 
@@ -51,7 +50,6 @@ This project is a 3D portfolio website built using [Three.js](https://threejs.or
 ### Controls
 
 - **Zoom**: Scroll to zoom in and out.
-- **Rotate**: Click and drag to rotate the camera around the planets.
-- **Click on Planets**: Clicking on a planet will focus the camera on that planet.
+- **Rotate**: Click and drag to rotate the camera around the solar system.
 
 ---
