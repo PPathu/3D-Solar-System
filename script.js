@@ -1,4 +1,5 @@
-let scene, camera, renderer, earth, controls;
+let scene, camera, renderer, earth, controls, starfield;
+let raycaster, mouse, isDragging = false;
 
 function init() {
     scene = new THREE.Scene();
@@ -16,12 +17,37 @@ function init() {
     document.getElementById('scene-container').appendChild(renderer.domElement);
 
     const textureLoader = new THREE.TextureLoader();
-    const earthTexture = textureLoader.load('textures/2k_earth_daymap.jpg');  // Make sure this file is in your project folder
 
-    const geometry = new THREE.SphereGeometry(1, 32, 32);
-    const material = new THREE.MeshStandardMaterial({ map: earthTexture });
-    earth = new THREE.Mesh(geometry, material);
+    // Load the Earth texture
+    const earthTexture = textureLoader.load('textures/2k_earth_daymap.jpg');
+
+    // Create the Earth sphere and apply the texture
+    const earthGeometry = new THREE.SphereGeometry(1, 32, 32);
+    const earthMaterial = new THREE.MeshStandardMaterial({ map: earthTexture });
+    earth = new THREE.Mesh(earthGeometry, earthMaterial);
     scene.add(earth);
+
+    // Create star particles
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = 15000;
+    const vertices = new Float32Array(particlesCount * 3); // x, y, z for each particle
+
+    for (let i = 0; i < particlesCount * 3; i++) {
+        vertices[i] = (Math.random() - 0.5) * 1000; // Distribute stars within a large cube
+    }
+
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+
+    const particleTexture = textureLoader.load('textures/star.png'); // Make sure this file exists
+    const particlesMaterial = new THREE.PointsMaterial({
+        map: particleTexture,
+        size: 0.5,
+        sizeAttenuation: true,
+        transparent: true,
+    });
+
+    const stars = new THREE.Points(particlesGeometry, particlesMaterial);
+    scene.add(stars);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
     scene.add(ambientLight);
@@ -30,22 +56,62 @@ function init() {
     directionalLight.position.set(5, 3, 5).normalize();
     scene.add(directionalLight);
 
-    // Add OrbitControls to allow clicking and dragging to rotate the planet
+    raycaster = new THREE.Raycaster();
+    mouse = new THREE.Vector2();
+
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;  // Smooth rotation
+    controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.enableZoom = false;  // Disable zoom if you want to keep the camera distance fixed
+    controls.enableZoom = false;
+
+    window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
 
     animate();
 }
 
+function onMouseDown(event) {
+    event.preventDefault();
+
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+
+    const intersects = raycaster.intersectObject(earth);
+
+    if (intersects.length > 0) {
+        isDragging = true;
+        controls.enabled = true;
+    } else {
+        controls.enabled = false;
+    }
+}
+
+function onMouseMove(event) {
+    if (isDragging) {
+        controls.update();
+    }
+}
+
+function onMouseUp(event) {
+    isDragging = false;
+    controls.enabled = false;
+}
+
 function animate() {
     requestAnimationFrame(animate);
-    
-    // Update the controls on each frame
-    controls.update();
 
-    // Render the scene from the perspective of the camera
+    earth.rotation.y += 0.003;
+
+    // Rotate the stars slightly to add some dynamism
+    scene.children.forEach(child => {
+        if (child instanceof THREE.Points) {
+            child.rotation.y += 0.0001;
+        }
+    });
+
     renderer.render(scene, camera);
 }
 
