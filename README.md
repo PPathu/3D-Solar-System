@@ -11,7 +11,7 @@ This project is a 3D portfolio website built using [Three.js](https://threejs.or
 - **Customizable**: Easily replace textures and tweak parameters to create your own 3D scenes.
 - **Responsive Design**: The layout adjusts to different screen sizes, ensuring a consistent experience across devices.
 
-![Screenshot](./images/Screenshot.png)
+<img src="./images/Screenshot.png" alt="Screenshot" width="300">
 
 ## Getting Started
 
