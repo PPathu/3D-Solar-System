@@ -30,7 +30,7 @@ function init() {
     sun = new THREE.Mesh(sunGeometry, sunMaterial);
 
     const sunLight = new THREE.PointLight(0xffffff, 1.5, 100); 
-    sun.add(sunLight); // Attach light to the Sun
+    sun.add(sunLight); 
     scene.add(sun);
 
     // Planets array with realistic rotation speeds scaled down
@@ -151,7 +151,6 @@ function animate() {
         planet.mesh.position.x = planet.distance * Math.cos(planet.angle);
         planet.mesh.position.z = planet.distance * Math.sin(planet.angle);
 
-        // Rotate the planet on its own axis with realistic speed, scaled down
         planet.mesh.rotation.y += planet.rotationSpeed;
     });
 
