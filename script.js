@@ -1,5 +1,8 @@
 let scene, camera, renderer, earth, controls, starfield;
 let raycaster, mouse, isDragging = false;
+let zoomingIn = true;  // Flag to indicate whether the camera is zooming in
+let zoomSpeed = 0.05;  // Speed of the zoom-in effect
+let startZoomDistance = 325;  // Initial distance the camera zooms in from
 
 function init() {
     scene = new THREE.Scene();
@@ -10,7 +13,9 @@ function init() {
         0.1, 
         1000
     );
-    camera.position.z = 3;
+
+    // Set the camera's initial position based on the startZoomDistance
+    camera.position.z = startZoomDistance;
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -63,12 +68,11 @@ function init() {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.enableZoom = true;  // Enable zooming with the scroll wheel
-    controls.zoomSpeed = 1.0;  // Adjust the zoom speed if needed
+    controls.enableZoom = true;
+    controls.zoomSpeed = 1.0;
 
-    // Set zoom limits
-    controls.minDistance = 4;  // Minimum distance from the Earth
-    controls.maxDistance = 500;  // Maximum distance to prevent zooming out beyond the stars
+    controls.minDistance = 1;
+    controls.maxDistance = startZoomDistance;
 
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onMouseMove);
@@ -117,6 +121,14 @@ function animate() {
             child.rotation.y += 0.0001;
         }
     });
+
+    // Handle zoom-in animation
+    if (zoomingIn) {
+        camera.position.z = THREE.MathUtils.lerp(camera.position.z, controls.minDistance + 3, zoomSpeed);
+        if (Math.abs(camera.position.z - (controls.minDistance + 3)) < 0.1) {
+            zoomingIn = false;
+        }
+    }
 
     renderer.render(scene, camera);
 }
